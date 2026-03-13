@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client/react'
+import { Link } from 'react-router'
 import { GetEventsDocument } from '../../src/generated/graphql'
 
 export default function Home() {
@@ -10,7 +11,9 @@ export default function Home() {
   return (
     <>
       {data?.events?.map((event) => (
-        <p key={event.id} className="text-xl">{event.name}</p>
+        <Link key={event.id} to={`/events/${event.id}`}>
+          <p className="text-xl">{event.name}</p>
+        </Link>
       ))}
     </>
   )

@@ -9,6 +9,7 @@ const typeDefs = readFileSync('../schemas/schema.graphql', { encoding: 'utf-8' }
 const resolvers: Resolvers = {
   Query: {
     events: () => db('events').select(),
+    event: (_, { id }) => db('events').where({ id }).first(),
   },
 };
 

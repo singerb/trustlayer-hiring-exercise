@@ -32,7 +32,13 @@ export type Feedback = {
 
 export type Query = {
   __typename: 'Query';
+  event: Maybe<Event>;
   events: Array<Event>;
+};
+
+
+export type QueryEventArgs = {
+  id: Scalars['ID']['input'];
 };
 
 export type GetEventsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -40,5 +46,13 @@ export type GetEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetEventsQuery = { events: Array<{ __typename: 'Event', id: string, name: string }> };
 
+export type GetEventQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetEventQuery = { event: { __typename: 'Event', id: string, name: string } | null };
+
 
 export const GetEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetEvents"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"events"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetEventsQuery, GetEventsQueryVariables>;
+export const GetEventDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetEvent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetEventQuery, GetEventQueryVariables>;

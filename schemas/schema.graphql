@@ -1,5 +1,6 @@
 type Query {
   events: [Event!]!
+  event(id: ID!): Event
 }
 
 type Event {
@@ -17,6 +18,13 @@ type Feedback {
 
 query GetEvents {
   events {
+    id
+    name
+  }
+}
+
+query GetEvent($id: ID!) {
+  event(id: $id) {
     id
     name
   }
