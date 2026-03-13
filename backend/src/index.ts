@@ -13,6 +13,14 @@ const resolvers: Resolvers = {
   },
   Event: {
     feedback: (event) => db('feedback').where({ event_id: event.id }),
+    averageRating: async (event) => {
+      const row = await db('feedback').where('event_id', event.id).avg('rating as avg').first();
+      return row?.avg ?? null;
+    },
+    reviewCount: async (event) => {
+      const row = await db('feedback').where('event_id', event.id).count('* as count').first();
+      return Number(row?.count ?? 0);
+    },
   },
   Feedback: {
     userName: (feedback) => feedback.user_name,

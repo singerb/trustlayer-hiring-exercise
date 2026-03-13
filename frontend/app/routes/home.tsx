@@ -18,8 +18,8 @@ export default function Home() {
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>{event.name}</CardTitle>
               <div className="flex flex-col items-end gap-1">
-                <StarRating rating={4.2} />
-                <span className="text-sm text-muted-foreground">12 reviews</span>
+                <StarRating rating={event.averageRating ?? 0} />
+                <span className="text-sm text-muted-foreground">{event.reviewCount} {event.reviewCount === 1 ? 'review' : 'reviews'}</span>
               </div>
             </CardHeader>
           </Card>

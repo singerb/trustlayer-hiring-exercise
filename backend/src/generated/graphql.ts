@@ -18,9 +18,11 @@ export type Scalars = {
 
 export type Event = {
   __typename?: 'Event';
+  averageRating?: Maybe<Scalars['Float']['output']>;
   feedback: Array<Feedback>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  reviewCount: Scalars['Int']['output'];
 };
 
 export type Feedback = {
@@ -119,6 +121,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Event: ResolverTypeWrapper<Event>;
   Feedback: ResolverTypeWrapper<Feedback>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
@@ -130,6 +133,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Event: Event;
   Feedback: Feedback;
+  Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Query: Record<PropertyKey, never>;
@@ -137,9 +141,11 @@ export type ResolversParentTypes = {
 };
 
 export type EventResolvers<ContextType = any, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = {
+  averageRating?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   feedback?: Resolver<Array<ResolversTypes['Feedback']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  reviewCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
 };
 
 export type FeedbackResolvers<ContextType = any, ParentType extends ResolversParentTypes['Feedback'] = ResolversParentTypes['Feedback']> = {

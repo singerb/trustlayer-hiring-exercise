@@ -31,6 +31,7 @@ export default function EventPage() {
       </div>
 
       <div className="flex flex-col gap-3">
+        <p className="text-sm text-muted-foreground">{event.feedback.length} {event.feedback.length === 1 ? 'review' : 'reviews'}</p>
         {event.feedback.map((fb) => (
           <Card key={fb.id}>
             <CardContent className="flex gap-4 pt-4">
