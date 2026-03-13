@@ -1,0 +1,30 @@
+{
+  "name": "event-feedback-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "compile": "tsc",
+    "startold": "yarn run compile && yarn nodemon ./dist/index.js",
+    "start": "yarn nodemon --exec tsx ./src/index.ts",
+    "lint": "yarn eslint src/",
+    "codegen": "graphql-codegen --config codegen.ts"
+  },
+  "dependencies": {
+    "@apollo/server": "^5.4.0",
+    "graphql": "^16.13.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@graphql-codegen/cli": "6.2.1",
+    "@graphql-codegen/typescript": "5.0.9",
+    "@graphql-codegen/typescript-resolvers": "5.1.7",
+    "@types/node": "^25.5.0",
+    "eslint": "^10.0.3",
+    "nodemon": "^3.1.14",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.0"
+  }
+}
