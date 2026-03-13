@@ -6,6 +6,7 @@ type Query {
 type Event {
   id: ID!
   name: String!
+  feedback: [Feedback!]!
 }
 
 type Feedback {
@@ -27,5 +28,11 @@ query GetEvent($id: ID!) {
   event(id: $id) {
     id
     name
+    feedback {
+      id
+      userName
+      rating
+      description
+    }
   }
 }

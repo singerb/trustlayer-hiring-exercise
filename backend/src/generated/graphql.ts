@@ -18,6 +18,7 @@ export type Scalars = {
 
 export type Event = {
   __typename?: 'Event';
+  feedback: Array<Feedback>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
 };
@@ -136,6 +137,7 @@ export type ResolversParentTypes = {
 };
 
 export type EventResolvers<ContextType = any, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = {
+  feedback?: Resolver<Array<ResolversTypes['Feedback']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };

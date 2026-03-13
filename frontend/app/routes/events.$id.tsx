@@ -12,7 +12,19 @@ export default function EventPage() {
   if (error) return <p>Error: {error.message}</p>
   if (!data?.event) return <p>Event not found</p>
 
+  const { event } = data
+
   return (
-    <h1 className="text-2xl">{data.event.name}</h1>
+    <div>
+      <h1 className="text-2xl">{event.name}</h1>
+      <ul className="mt-4">
+        {event.feedback.map((fb) => (
+          <li key={fb.id} className="mt-2">
+            <p className="font-semibold">{fb.userName} — {fb.rating}/5</p>
+            <p>{fb.description}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }

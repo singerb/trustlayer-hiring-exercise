@@ -11,6 +11,12 @@ const resolvers: Resolvers = {
     events: () => db('events').select(),
     event: (_, { id }) => db('events').where({ id }).first(),
   },
+  Event: {
+    feedback: (event) => db('feedback').where({ event_id: event.id }),
+  },
+  Feedback: {
+    userName: (feedback) => feedback.user_name,
+  },
 };
 
 const server = new ApolloServer({
