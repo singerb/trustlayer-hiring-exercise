@@ -29,7 +29,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function Root() {
   return (
     <ApolloProvider client={client}>
-      <Outlet />
+      <div className="mx-auto max-w-2xl px-4 py-8">
+        <Outlet />
+      </div>
     </ApolloProvider>
   )
 }
