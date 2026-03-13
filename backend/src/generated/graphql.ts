@@ -25,6 +25,12 @@ export type Event = {
   reviewCount: Scalars['Int']['output'];
 };
 
+
+export type EventFeedbackArgs = {
+  maxRating?: InputMaybe<Scalars['Int']['input']>;
+  minRating?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type Feedback = {
   __typename?: 'Feedback';
   description: Scalars['String']['output'];
@@ -66,6 +72,8 @@ export type Subscription = {
 
 export type SubscriptionFeedbackAddedArgs = {
   eventId: Scalars['ID']['input'];
+  maxRating?: InputMaybe<Scalars['Int']['input']>;
+  minRating?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -169,7 +177,7 @@ export type ResolversParentTypes = {
 
 export type EventResolvers<ContextType = any, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = {
   averageRating?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
-  feedback?: Resolver<Array<ResolversTypes['Feedback']>, ParentType, ContextType>;
+  feedback?: Resolver<Array<ResolversTypes['Feedback']>, ParentType, ContextType, Partial<EventFeedbackArgs>>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   reviewCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;

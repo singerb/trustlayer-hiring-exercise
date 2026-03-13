@@ -1,7 +1,7 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { PubSub } from 'graphql-subscriptions';
+import { PubSub, withFilter } from 'graphql-subscriptions';
 import { useServer } from 'graphql-ws/use/ws';
 import { createServer } from 'node:http';
 import { readFileSync } from 'node:fs';
@@ -19,7 +19,12 @@ const resolvers: Resolvers = {
     event: (_, { id }) => db('events').where({ id }).first(),
   },
   Event: {
-    feedback: (event) => db('feedback').where({ event_id: event.id }),
+    feedback: (event, { minRating, maxRating }) => {
+      let query = db('feedback').where({ event_id: event.id });
+      if (minRating != null) query = query.where('rating', '>=', minRating);
+      if (maxRating != null) query = query.where('rating', '<=', maxRating);
+      return query;
+    },
     averageRating: async (event) => {
       const row = await db('feedback').where('event_id', event.id).avg('rating as avg').first();
       return row?.avg ?? null;
@@ -49,8 +54,16 @@ const resolvers: Resolvers = {
   },
   Subscription: {
     feedbackAdded: {
-      subscribe: (_, { eventId }) =>
-        pubsub.asyncIterableIterator(`FEEDBACK_ADDED.${eventId}`),
+      subscribe: withFilter(
+        (_, { eventId }) => pubsub.asyncIterableIterator(`FEEDBACK_ADDED.${eventId}`),
+        // TODO: another annoying any here
+        (payload: any, { minRating, maxRating }) => {
+          const rating = payload.feedbackAdded.rating;
+          if (minRating != null && rating < minRating) return false;
+          if (maxRating != null && rating > maxRating) return false;
+          return true;
+        }
+      ),
     },
   },
 };

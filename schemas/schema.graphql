@@ -8,13 +8,13 @@ type Mutation {
 }
 
 type Subscription {
-  feedbackAdded(eventId: ID!): Feedback!
+  feedbackAdded(eventId: ID!, minRating: Int, maxRating: Int): Feedback!
 }
 
 type Event {
   id: ID!
   name: String!
-  feedback: [Feedback!]!
+  feedback(minRating: Int, maxRating: Int): [Feedback!]!
   averageRating: Float
   reviewCount: Int!
 }
@@ -36,11 +36,11 @@ query GetEvents {
   }
 }
 
-query GetEvent($id: ID!) {
+query GetEvent($id: ID!, $minRating: Int, $maxRating: Int) {
   event(id: $id) {
     id
     name
-    feedback {
+    feedback(minRating: $minRating, maxRating: $maxRating) {
       id
       userName
       rating
@@ -59,8 +59,8 @@ mutation AddFeedback($eventId: ID!, $userName: String!, $rating: Int!, $descript
   }
 }
 
-subscription FeedbackAdded($eventId: ID!) {
-  feedbackAdded(eventId: $eventId) {
+subscription FeedbackAdded($eventId: ID!, $minRating: Int, $maxRating: Int) {
+  feedbackAdded(eventId: $eventId, minRating: $minRating, maxRating: $maxRating) {
     id
     userName
     rating

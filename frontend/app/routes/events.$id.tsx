@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client/react'
 import { useParams, Link } from 'react-router'
 import { GetEventDocument, FeedbackAddedDocument } from '../../src/generated/graphql'
@@ -8,15 +8,25 @@ import { ChevronLeft } from 'lucide-react'
 
 export default function EventPage() {
   const { id } = useParams()
+  const [minEnabled, setMinEnabled] = useState(false)
+  const [minRating, setMinRating] = useState(1)
+  const [maxEnabled, setMaxEnabled] = useState(false)
+  const [maxRating, setMaxRating] = useState(5)
+
+  const filterVars = {
+    minRating: minEnabled ? minRating : undefined,
+    maxRating: maxEnabled ? maxRating : undefined,
+  }
+
   const { loading, error, data, subscribeToMore } = useQuery(GetEventDocument, {
-    variables: { id: id! },
+    variables: { id: id!, ...filterVars },
   })
 
   useEffect(() => {
     if (!id) return
     return subscribeToMore({
       document: FeedbackAddedDocument,
-      variables: { eventId: id },
+      variables: { eventId: id, ...filterVars },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data || !prev.event) return prev
         const newFeedback = subscriptionData.data.feedbackAdded
@@ -29,7 +39,7 @@ export default function EventPage() {
         }
       },
     })
-  }, [id, subscribeToMore])
+  }, [id, subscribeToMore, minEnabled, minRating, maxEnabled, maxRating])
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error: {error.message}</p>
@@ -48,6 +58,21 @@ export default function EventPage() {
         <Link to={`/events/${id}/add-feedback`} className="mt-2 inline-block text-sm text-primary underline">
           Submit feedback
         </Link>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={minEnabled} onChange={e => setMinEnabled(e.target.checked)} />
+          Min stars:
+          <input type="number" min={1} max={5} value={minRating} disabled={!minEnabled}
+            onChange={e => setMinRating(Number(e.target.value))} className="w-16 border rounded px-1" />
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={maxEnabled} onChange={e => setMaxEnabled(e.target.checked)} />
+          Max stars:
+          <input type="number" min={1} max={5} value={maxRating} disabled={!maxEnabled}
+            onChange={e => setMaxRating(Number(e.target.value))} className="w-16 border rounded px-1" />
+        </label>
       </div>
 
       <div className="flex flex-col gap-3">
