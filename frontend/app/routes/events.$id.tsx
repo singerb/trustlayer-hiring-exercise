@@ -53,7 +53,7 @@ export default function EventPage() {
       <div className="flex flex-col gap-3">
         <p className="text-sm text-muted-foreground">{event.feedback.length} {event.feedback.length === 1 ? 'review' : 'reviews'}</p>
         {[...event.feedback].reverse().map((fb) => (
-          <Card key={fb.id}>
+          <Card key={fb.id} className="animate-in slide-in-from-top-2 fade-in-0 duration-300">
             <CardContent className="flex gap-4 pt-4">
               <div className="flex flex-col gap-1 min-w-[120px]">
                 <StarRating rating={fb.rating} />
