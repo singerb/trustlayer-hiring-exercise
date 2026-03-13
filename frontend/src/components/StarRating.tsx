@@ -19,7 +19,7 @@ export function StarRating({ rating, size = 16 }: StarRatingProps) {
       {Array.from({ length: empty }).map((_, i) => (
         <Star key={`e${i}`} size={size} className="text-muted-foreground" />
       ))}
-      <span className="ml-1 text-sm text-muted-foreground">({rating})</span>
+      <span className="ml-1 text-sm text-muted-foreground">({rating.toFixed(2)})</span>
     </span>
   )
 }
