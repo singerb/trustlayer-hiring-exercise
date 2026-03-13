@@ -25,7 +25,7 @@ export default function EventPage() {
 
       <div>
         <h1 className="text-3xl font-bold">{event.name}</h1>
-        <Link to={`/events/${id}/feedback/new`} className="mt-2 inline-block text-sm text-primary underline">
+        <Link to={`/events/${id}/add-feedback`} className="mt-2 inline-block text-sm text-primary underline">
           Submit feedback
         </Link>
       </div>

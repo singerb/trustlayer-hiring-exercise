@@ -34,6 +34,19 @@ export type Feedback = {
   userName: Scalars['String']['output'];
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  addFeedback: Feedback;
+};
+
+
+export type MutationAddFeedbackArgs = {
+  description: Scalars['String']['input'];
+  eventId: Scalars['ID']['input'];
+  rating: Scalars['Int']['input'];
+  userName: Scalars['String']['input'];
+};
+
 export type Query = {
   __typename?: 'Query';
   event?: Maybe<Event>;
@@ -124,6 +137,7 @@ export type ResolversTypes = {
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
 };
@@ -136,6 +150,7 @@ export type ResolversParentTypes = {
   Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
+  Mutation: Record<PropertyKey, never>;
   Query: Record<PropertyKey, never>;
   String: Scalars['String']['output'];
 };
@@ -156,6 +171,10 @@ export type FeedbackResolvers<ContextType = any, ParentType extends ResolversPar
   userName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  addFeedback?: Resolver<ResolversTypes['Feedback'], ParentType, ContextType, RequireFields<MutationAddFeedbackArgs, 'description' | 'eventId' | 'rating' | 'userName'>>;
+};
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   event?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryEventArgs, 'id'>>;
   events?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType>;
@@ -164,6 +183,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type Resolvers<ContextType = any> = {
   Event?: EventResolvers<ContextType>;
   Feedback?: FeedbackResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 };
 

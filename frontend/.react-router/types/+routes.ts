@@ -19,12 +19,17 @@ type Pages = {
       "id": string;
     };
   };
+  "/events/:id/add-feedback": {
+    params: {
+      "id": string;
+    };
+  };
 };
 
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/events/:id";
+    page: "/" | "/events/:id" | "/events/:id/add-feedback";
   };
   "routes/home.tsx": {
     id: "routes/home";
@@ -34,10 +39,15 @@ type RouteFiles = {
     id: "routes/events.$id";
     page: "/events/:id";
   };
+  "routes/events.$id.add-feedback.tsx": {
+    id: "routes/events.$id.add-feedback";
+    page: "/events/:id/add-feedback";
+  };
 };
 
 type RouteModules = {
   "root": typeof import("./app/root.tsx");
   "routes/home": typeof import("./app/routes/home.tsx");
   "routes/events.$id": typeof import("./app/routes/events.$id.tsx");
+  "routes/events.$id.add-feedback": typeof import("./app/routes/events.$id.add-feedback.tsx");
 };

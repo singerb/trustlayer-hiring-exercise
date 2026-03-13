@@ -23,7 +23,20 @@ const resolvers: Resolvers = {
     },
   },
   Feedback: {
-    userName: (feedback) => feedback.user_name,
+    // TODO: would love to get rid of this any; needs some work to get knex types and auto camel-case conversion set up
+    userName: (feedback: any) => feedback.user_name,
+    eventId: (feedback: any) => feedback.event_id,
+  },
+  Mutation: {
+    addFeedback: async (_, { eventId, userName, rating, description }) => {
+      const [id] = await db('feedback').insert({
+        event_id: eventId,
+        user_name: userName,
+        rating,
+        description,
+      });
+      return db('feedback').where({ id }).first();
+    },
   },
 };
 

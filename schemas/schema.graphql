@@ -3,6 +3,10 @@ type Query {
   event(id: ID!): Event
 }
 
+type Mutation {
+  addFeedback(eventId: ID!, userName: String!, rating: Int!, description: String!): Feedback!
+}
+
 type Event {
   id: ID!
   name: String!
@@ -38,5 +42,15 @@ query GetEvent($id: ID!) {
       rating
       description
     }
+  }
+}
+
+mutation AddFeedback($eventId: ID!, $userName: String!, $rating: Int!, $description: String!) {
+  addFeedback(eventId: $eventId, userName: $userName, rating: $rating, description: $description) {
+    id
+    eventId
+    userName
+    rating
+    description
   }
 }
