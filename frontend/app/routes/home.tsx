@@ -1,8 +1,7 @@
 import { useQuery } from '@apollo/client/react'
-import { GetEventsDocument } from './generated/graphql'
-import './App.css'
+import { GetEventsDocument } from '../../src/generated/graphql'
 
-function App() {
+export default function Home() {
   const { loading, error, data } = useQuery(GetEventsDocument)
 
   if (loading) return <p>Loading...</p>
@@ -16,5 +15,3 @@ function App() {
     </>
   )
 }
-
-export default App
