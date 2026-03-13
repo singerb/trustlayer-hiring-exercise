@@ -7,6 +7,10 @@ type Mutation {
   addFeedback(eventId: ID!, userName: String!, rating: Int!, description: String!): Feedback!
 }
 
+type Subscription {
+  feedbackAdded(eventId: ID!): Feedback!
+}
+
 type Event {
   id: ID!
   name: String!
@@ -49,6 +53,15 @@ mutation AddFeedback($eventId: ID!, $userName: String!, $rating: Int!, $descript
   addFeedback(eventId: $eventId, userName: $userName, rating: $rating, description: $description) {
     id
     eventId
+    userName
+    rating
+    description
+  }
+}
+
+subscription FeedbackAdded($eventId: ID!) {
+  feedbackAdded(eventId: $eventId) {
+    id
     userName
     rating
     description

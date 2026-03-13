@@ -1,15 +1,35 @@
+import { useEffect } from 'react'
 import { useQuery } from '@apollo/client/react'
 import { useParams, Link } from 'react-router'
-import { GetEventDocument } from '../../src/generated/graphql'
+import { GetEventDocument, FeedbackAddedDocument } from '../../src/generated/graphql'
 import { Card, CardContent } from '../../src/components/ui/card'
 import { StarRating } from '../../src/components/StarRating'
 import { ChevronLeft } from 'lucide-react'
 
 export default function EventPage() {
   const { id } = useParams()
-  const { loading, error, data } = useQuery(GetEventDocument, {
+  const { loading, error, data, subscribeToMore } = useQuery(GetEventDocument, {
     variables: { id: id! },
   })
+
+  useEffect(() => {
+    if (!id) return
+    return subscribeToMore({
+      document: FeedbackAddedDocument,
+      variables: { eventId: id },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data || !prev.event) return prev
+        const newFeedback = subscriptionData.data.feedbackAdded
+        return {
+          ...prev,
+          event: {
+            ...prev.event,
+            feedback: [...prev.event.feedback, newFeedback],
+          },
+        }
+      },
+    })
+  }, [id, subscribeToMore])
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error: {error.message}</p>
@@ -32,7 +52,7 @@ export default function EventPage() {
 
       <div className="flex flex-col gap-3">
         <p className="text-sm text-muted-foreground">{event.feedback.length} {event.feedback.length === 1 ? 'review' : 'reviews'}</p>
-        {event.feedback.map((fb) => (
+        {[...event.feedback].reverse().map((fb) => (
           <Card key={fb.id}>
             <CardContent className="flex gap-4 pt-4">
               <div className="flex flex-col gap-1 min-w-[120px]">

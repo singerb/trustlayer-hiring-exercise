@@ -1,8 +1,15 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { PubSub } from 'graphql-subscriptions';
+import { useServer } from 'graphql-ws/use/ws';
+import { createServer } from 'node:http';
 import { readFileSync } from 'node:fs';
+import { WebSocketServer } from 'ws';
 import { Resolvers } from './generated/graphql.js';
 import db from './db.js';
+
+const pubsub = new PubSub();
 
 const typeDefs = readFileSync('../schemas/schema.graphql', { encoding: 'utf-8' });
 
@@ -35,18 +42,32 @@ const resolvers: Resolvers = {
         rating,
         description,
       });
-      return db('feedback').where({ id }).first();
+      const feedback = await db('feedback').where({ id }).first();
+      await pubsub.publish(`FEEDBACK_ADDED.${eventId}`, { feedbackAdded: feedback });
+      return feedback;
+    },
+  },
+  Subscription: {
+    feedbackAdded: {
+      subscribe: (_, { eventId }) =>
+        pubsub.asyncIterableIterator(`FEEDBACK_ADDED.${eventId}`),
     },
   },
 };
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+const schema = makeExecutableSchema({ typeDefs, resolvers });
+
+// Standalone WebSocket server on port 4001 for subscriptions
+const wsHttpServer = createServer();
+const wsServer = new WebSocketServer({ server: wsHttpServer, path: '/' });
+useServer({ schema }, wsServer);
+wsHttpServer.listen(4001, () => {
+  console.log('Subscriptions ready at ws://localhost:4001/');
 });
 
+// Apollo HTTP server on port 4000
+const server = new ApolloServer({ schema });
 const { url } = await startStandaloneServer(server, {
   listen: { port: 4000 },
 });
-
-console.log(`🚀  Server ready at: ${url}`);
+console.log(`Server ready at ${url}`);
