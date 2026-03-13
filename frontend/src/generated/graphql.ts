@@ -15,21 +15,30 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-export type Book = {
-  __typename: 'Book';
-  author: Maybe<Scalars['String']['output']>;
-  title: Maybe<Scalars['String']['output']>;
+export type Event = {
+  __typename: 'Event';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type Feedback = {
+  __typename: 'Feedback';
+  description: Scalars['String']['output'];
+  eventId: Scalars['ID']['output'];
+  id: Scalars['ID']['output'];
+  rating: Scalars['Int']['output'];
+  userName: Scalars['String']['output'];
 };
 
 export type Query = {
   __typename: 'Query';
-  books: Maybe<Array<Maybe<Book>>>;
+  events: Array<Event>;
 };
 
-export type GetBooksQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBooksQuery = { books: Array<{ __typename: 'Book', title: string | null, author: string | null } | null> | null };
+export type GetEventsQuery = { events: Array<{ __typename: 'Event', id: string, name: string }> };
 
 
-export const GetBooksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBooks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"books"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"author"}}]}}]}}]} as unknown as DocumentNode<GetBooksQuery, GetBooksQueryVariables>;
+export const GetEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetEvents"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"events"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetEventsQuery, GetEventsQueryVariables>;

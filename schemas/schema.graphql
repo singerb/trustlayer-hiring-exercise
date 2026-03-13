@@ -1,15 +1,23 @@
 type Query {
-  books: [Book]
+  events: [Event!]!
 }
 
-type Book {
-  title: String
-  author: String
+type Event {
+  id: ID!
+  name: String!
 }
 
-query GetBooks {
-  books {
-    title
-    author
+type Feedback {
+  id: ID!
+  eventId: ID!
+  userName: String!
+  rating: Int!
+  description: String!
+}
+
+query GetEvents {
+  events {
+    id
+    name
   }
 }
