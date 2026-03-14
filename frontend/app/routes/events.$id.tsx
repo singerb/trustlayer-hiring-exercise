@@ -48,7 +48,7 @@ export default function EventPage() {
         }
       },
     })
-  }, [id, subscribeToMore, minEnabled, minRating, maxEnabled, maxRating, page, filterVars])
+  }, [id, subscribeToMore, minEnabled, minRating, maxEnabled, maxRating, page])
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error: {error.message}</p>

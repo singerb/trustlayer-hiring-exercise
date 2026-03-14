@@ -14,6 +14,8 @@ Frontend:
 - `yarn install`
 - `yarn run dev`
 
+The app will be available at http://localhost:5174
+
 ## Technology choices and reasoning
 
 Backend:
@@ -23,6 +25,10 @@ Frontend:
 React and GraphQL (Apollo again), as requested. I added React Router (in framework mode and without any SSR) for basic page routing. Redux or similar was not needed at this scale, especially with the caching behavior built in to Apollo. Tailwind for styling, of course, Lucide icons, and a few ShadCN components for ease (cards, mostly). As with the backend, GraphQL codegen handles type information for the schemas, making the querying return nicely typed data for React.
 
 ## Things to clean up in the future that were cut for scope/time
+
+Add prettier and run it. This makes me twitch a bit right now honestly, but it's not a functional issue.
+
+No tests anywhere.
 
 No way to add events right now outside of the seeds or raw DB access. This is fine for the current case; you can see two different events and add feedback to each one. Adding a new mutation for this and either a script or some new UI wouldn't be hard.
 
