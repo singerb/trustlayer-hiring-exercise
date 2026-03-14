@@ -15,6 +15,7 @@ export default function EventPage() {
   const [maxEnabled, setMaxEnabled] = useState(false)
   const [maxRating, setMaxRating] = useState(5)
   const [page, setPage] = useState(1)
+  const [liveCount, setLiveCount] = useState(0)
 
   const filterVars = {
     minRating: minEnabled ? minRating : undefined,
@@ -28,12 +29,14 @@ export default function EventPage() {
   })
 
   useEffect(() => {
+    setLiveCount(0)
     if (!id || page !== 1) return
     return subscribeToMore({
       document: FeedbackAddedDocument,
       variables: { eventId: id, ...filterVars },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data || !prev.event) return prev
+        setLiveCount(c => c + 1)
         const newFeedback = subscriptionData.data.feedbackAdded
         return {
           ...prev,
@@ -82,7 +85,13 @@ export default function EventPage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <p className="text-sm text-muted-foreground">{event.feedbackCount} {event.feedbackCount === 1 ? 'review' : 'reviews'}</p>
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <span>{event.feedbackCount} {event.feedbackCount === 1 ? 'review' : 'reviews'}</span>
+          {page === 1
+            ? <span>● Live{liveCount > 0 ? ` · ${liveCount} new` : ''}</span>
+            : <span>○ Live updates paused</span>
+          }
+        </div>
         {event.feedback.map((fb) => (
           <Card key={fb.id} className="animate-in slide-in-from-top-2 fade-in-0 duration-300">
             <CardContent className="flex gap-4 pt-4">
