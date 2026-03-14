@@ -29,6 +29,7 @@ export default function EventPage() {
   })
 
   useEffect(() => {
+    // TODO: not a great idea, but with the constant 0 we won't get an infinite loop here
     setLiveCount(0)
     if (!id || page !== 1) return
     return subscribeToMore({
@@ -42,12 +43,12 @@ export default function EventPage() {
           ...prev,
           event: {
             ...prev.event,
-            feedback: [newFeedback, ...prev.event.feedback],
+            feedback: [newFeedback, ...prev.event.feedback], // prepend because we're in reverse order
           },
         }
       },
     })
-  }, [id, subscribeToMore, minEnabled, minRating, maxEnabled, maxRating, page])
+  }, [id, subscribeToMore, minEnabled, minRating, maxEnabled, maxRating, page, filterVars])
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error: {error.message}</p>

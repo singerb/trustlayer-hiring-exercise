@@ -11,6 +11,7 @@ import db from './db.js';
 
 const pubsub = new PubSub();
 
+// TODO: requires running the server in the right dir
 const typeDefs = readFileSync('../schemas/schema.graphql', { encoding: 'utf-8' });
 
 const resolvers: Resolvers = {
@@ -42,7 +43,7 @@ const resolvers: Resolvers = {
     },
   },
   Feedback: {
-    // TODO: would love to get rid of this any; needs some work to get knex types and auto camel-case conversion set up
+    // TODO: would love to get rid of this any; needs some work to get knex types set up, and maybe auto-camel-case conversion could do it for us
     userName: (feedback: any) => feedback.user_name,
     eventId: (feedback: any) => feedback.event_id,
   },
@@ -63,7 +64,7 @@ const resolvers: Resolvers = {
     feedbackAdded: {
       subscribe: withFilter(
         (_, { eventId }) => pubsub.asyncIterableIterator(`FEEDBACK_ADDED.${eventId}`),
-        // TODO: another annoying any here
+        // TODO: another annoying any here; I assume the pubsub stuff can be better typed
         (payload: any, { minRating, maxRating }) => {
           const rating = payload.feedbackAdded.rating;
           if (minRating != null && rating < minRating) return false;
@@ -91,3 +92,5 @@ const { url } = await startStandaloneServer(server, {
   listen: { port: 4000 },
 });
 console.log(`Server ready at ${url}`);
+
+// TODO: with the express middleware these could be combined, but this works fine too honestly
