@@ -28,7 +28,8 @@ export default function AddFeedbackPage() {
     e.preventDefault()
     await addFeedback({
       variables: { eventId: id!, userName, rating, description },
-      refetchQueries: [{ query: GetEventDocument, variables: { id: id! } }],
+      // TODO: this is a bit much in terms of coupling with the events page (knowing the pagination vars), but works
+      refetchQueries: [{ query: GetEventDocument, variables: { id: id!, offset: 0, limit: 10 } }],
       awaitRefetchQueries: true,
     })
     navigate(`/events/${id}`)

@@ -19,11 +19,18 @@ const resolvers: Resolvers = {
     event: (_, { id }) => db('events').where({ id }).first(),
   },
   Event: {
-    feedback: (event, { minRating, maxRating }) => {
-      let query = db('feedback').where({ event_id: event.id });
+    feedback: (event, { minRating, maxRating, offset, limit }) => {
+      let query = db('feedback').where({ event_id: event.id }).orderBy('id', 'desc');
       if (minRating != null) query = query.where('rating', '>=', minRating);
       if (maxRating != null) query = query.where('rating', '<=', maxRating);
-      return query;
+      return query.limit(limit ?? 10).offset(offset ?? 0);
+    },
+    feedbackCount: async (event, { minRating, maxRating }) => {
+      let query = db('feedback').where('event_id', event.id);
+      if (minRating != null) query = query.where('rating', '>=', minRating);
+      if (maxRating != null) query = query.where('rating', '<=', maxRating);
+      const row = await query.count('* as count').first();
+      return Number(row?.count ?? 0);
     },
     averageRating: async (event) => {
       const row = await db('feedback').where('event_id', event.id).avg('rating as avg').first();

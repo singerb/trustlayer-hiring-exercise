@@ -20,6 +20,7 @@ export type Event = {
   __typename?: 'Event';
   averageRating?: Maybe<Scalars['Float']['output']>;
   feedback: Array<Feedback>;
+  feedbackCount: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   reviewCount: Scalars['Int']['output'];
@@ -27,6 +28,14 @@ export type Event = {
 
 
 export type EventFeedbackArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  maxRating?: InputMaybe<Scalars['Int']['input']>;
+  minRating?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type EventFeedbackCountArgs = {
   maxRating?: InputMaybe<Scalars['Int']['input']>;
   minRating?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -178,6 +187,7 @@ export type ResolversParentTypes = {
 export type EventResolvers<ContextType = any, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = {
   averageRating?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   feedback?: Resolver<Array<ResolversTypes['Feedback']>, ParentType, ContextType, Partial<EventFeedbackArgs>>;
+  feedbackCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType, Partial<EventFeedbackCountArgs>>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   reviewCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;

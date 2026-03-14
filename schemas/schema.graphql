@@ -14,7 +14,8 @@ type Subscription {
 type Event {
   id: ID!
   name: String!
-  feedback(minRating: Int, maxRating: Int): [Feedback!]!
+  feedback(minRating: Int, maxRating: Int, offset: Int, limit: Int): [Feedback!]!
+  feedbackCount(minRating: Int, maxRating: Int): Int!
   averageRating: Float
   reviewCount: Int!
 }
@@ -36,16 +37,17 @@ query GetEvents {
   }
 }
 
-query GetEvent($id: ID!, $minRating: Int, $maxRating: Int) {
+query GetEvent($id: ID!, $minRating: Int, $maxRating: Int, $offset: Int, $limit: Int) {
   event(id: $id) {
     id
     name
-    feedback(minRating: $minRating, maxRating: $maxRating) {
+    feedback(minRating: $minRating, maxRating: $maxRating, offset: $offset, limit: $limit) {
       id
       userName
       rating
       description
     }
+    feedbackCount(minRating: $minRating, maxRating: $maxRating)
   }
 }
 
