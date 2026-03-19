@@ -1,13 +1,13 @@
 {
-  "compilerOptions": {
-    "rootDirs": ["src"],
-    "outDir": "dist",
-    "lib": ["es2023"],
-    "target": "es2023",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "esModuleInterop": true,
-    "types": ["node"],
-    "skipLibCheck": true
-  }
+	"compilerOptions": {
+		"rootDirs": ["src"],
+		"outDir": "dist",
+		"lib": ["es2023"],
+		"target": "es2023",
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"esModuleInterop": true,
+		"types": ["node"],
+		"skipLibCheck": true
+	}
 }

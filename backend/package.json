@@ -1,43 +1,46 @@
 {
-  "name": "event-feedback-backend",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "type": "module",
-  "scripts": {
-    "compile": "tsc",
-    "startold": "yarn run compile && yarn nodemon ./dist/index.js",
-    "start": "yarn nodemon --exec tsx ./src/index.ts",
-    "lint": "yarn eslint src/",
-    "codegen": "graphql-codegen --config codegen.ts",
-    "migrate": "tsx ./node_modules/.bin/knex migrate:latest --knexfile knexfile.ts",
-    "seed": "tsx ./node_modules/.bin/knex seed:run --knexfile knexfile.ts"
-  },
-  "dependencies": {
-    "@apollo/server": "^5.4.0",
-    "@graphql-tools/schema": "^10.0.31",
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "graphql": "^16.13.1",
-    "graphql-subscriptions": "^3.0.0",
-    "graphql-ws": "^6.0.7",
-    "knex": "^3.1.0",
-    "sqlite3": "^6.0.1",
-    "ws": "^8.19.0"
-  },
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@graphql-codegen/cli": "6.2.1",
-    "@graphql-codegen/typescript": "5.0.9",
-    "@graphql-codegen/typescript-resolvers": "5.1.7",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
-    "@types/node": "^25.5.0",
-    "@types/ws": "^8.18.1",
-    "eslint": "^10.0.3",
-    "nodemon": "^3.1.14",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.0"
-  }
+	"name": "event-feedback-backend",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"type": "module",
+	"scripts": {
+		"compile": "tsc",
+		"startold": "yarn run compile && yarn nodemon ./dist/index.js",
+		"start": "yarn nodemon --exec tsx ./src/index.ts",
+		"typecheck": "tsc --noEmit",
+		"lint": "yarn eslint src/",
+		"format": "prettier --write .",
+		"codegen": "graphql-codegen --config codegen.ts",
+		"migrate": "tsx ./node_modules/.bin/knex migrate:latest --knexfile knexfile.ts",
+		"seed": "tsx ./node_modules/.bin/knex seed:run --knexfile knexfile.ts"
+	},
+	"dependencies": {
+		"@apollo/server": "^5.4.0",
+		"@graphql-tools/schema": "^10.0.31",
+		"cors": "^2.8.6",
+		"express": "^5.2.1",
+		"graphql": "^16.13.1",
+		"graphql-subscriptions": "^3.0.0",
+		"graphql-ws": "^6.0.7",
+		"knex": "^3.1.0",
+		"sqlite3": "^6.0.1",
+		"ws": "^8.19.0"
+	},
+	"devDependencies": {
+		"@eslint/js": "^10.0.1",
+		"@graphql-codegen/cli": "6.2.1",
+		"@graphql-codegen/typescript": "5.0.9",
+		"@graphql-codegen/typescript-resolvers": "5.1.7",
+		"@types/cors": "^2.8.19",
+		"@types/express": "^5.0.6",
+		"@types/node": "^25.5.0",
+		"@types/ws": "^8.18.1",
+		"eslint": "^10.0.3",
+		"nodemon": "^3.1.14",
+		"prettier": "^3.8.1",
+		"tsx": "^4.21.0",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.57.0"
+	}
 }
