@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client/react";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useSearchParams } from "react-router";
 import {
 	GetEventDocument,
 	type GetEventQuery,
@@ -14,11 +14,18 @@ const PAGE_SIZE = 10;
 
 export default function EventPage() {
 	const { id } = useParams();
-	const [minEnabled, setMinEnabled] = useState(false);
-	const [minRating, setMinRating] = useState(1);
-	const [maxEnabled, setMaxEnabled] = useState(false);
-	const [maxRating, setMaxRating] = useState(5);
-	const [page, setPage] = useState(1);
+	const [searchParams, setSearchParams] = useSearchParams();
+	const page = Math.max(1, Number(searchParams.get("page") ?? 1));
+	const minEnabled = searchParams.get("minEnabled") === "true";
+	const minRating = Math.min(
+		5,
+		Math.max(1, Number(searchParams.get("minRating") ?? 1)),
+	);
+	const maxEnabled = searchParams.get("maxEnabled") === "true";
+	const maxRating = Math.min(
+		5,
+		Math.max(1, Number(searchParams.get("maxRating") ?? 5)),
+	);
 	const [liveCount, setLiveCount] = useState(0);
 
 	const filterVars = {
@@ -91,8 +98,13 @@ export default function EventPage() {
 						type="checkbox"
 						checked={minEnabled}
 						onChange={(e) => {
-							setMinEnabled(e.target.checked);
-							setPage(1);
+							setSearchParams((p) => {
+								const next = new URLSearchParams(p);
+								if (e.target.checked) next.set("minEnabled", "true");
+								else next.delete("minEnabled");
+								next.set("page", "1");
+								return next;
+							});
 						}}
 					/>
 					Min stars:
@@ -103,8 +115,12 @@ export default function EventPage() {
 						value={minRating}
 						disabled={!minEnabled}
 						onChange={(e) => {
-							setMinRating(Number(e.target.value));
-							setPage(1);
+							setSearchParams((p) => {
+								const next = new URLSearchParams(p);
+								next.set("minRating", e.target.value);
+								next.set("page", "1");
+								return next;
+							});
 						}}
 						className="w-16 border rounded px-1"
 					/>
@@ -114,8 +130,13 @@ export default function EventPage() {
 						type="checkbox"
 						checked={maxEnabled}
 						onChange={(e) => {
-							setMaxEnabled(e.target.checked);
-							setPage(1);
+							setSearchParams((p) => {
+								const next = new URLSearchParams(p);
+								if (e.target.checked) next.set("maxEnabled", "true");
+								else next.delete("maxEnabled");
+								next.set("page", "1");
+								return next;
+							});
 						}}
 					/>
 					Max stars:
@@ -126,8 +147,12 @@ export default function EventPage() {
 						value={maxRating}
 						disabled={!maxEnabled}
 						onChange={(e) => {
-							setMaxRating(Number(e.target.value));
-							setPage(1);
+							setSearchParams((p) => {
+								const next = new URLSearchParams(p);
+								next.set("maxRating", e.target.value);
+								next.set("page", "1");
+								return next;
+							});
 						}}
 						className="w-16 border rounded px-1"
 					/>
@@ -165,7 +190,13 @@ export default function EventPage() {
 				{totalPages > 1 && (
 					<div className="flex items-center justify-between text-sm">
 						<button
-							onClick={() => setPage((p) => p - 1)}
+							onClick={() =>
+								setSearchParams((p) => {
+									const next = new URLSearchParams(p);
+									next.set("page", String(page - 1));
+									return next;
+								})
+							}
 							disabled={page === 1}
 							className="px-3 py-1 border rounded disabled:opacity-40"
 						>
@@ -175,7 +206,13 @@ export default function EventPage() {
 							Page {page} of {totalPages}
 						</span>
 						<button
-							onClick={() => setPage((p) => p + 1)}
+							onClick={() =>
+								setSearchParams((p) => {
+									const next = new URLSearchParams(p);
+									next.set("page", String(page + 1));
+									return next;
+								})
+							}
 							disabled={page >= totalPages}
 							className="px-3 py-1 border rounded disabled:opacity-40"
 						>
