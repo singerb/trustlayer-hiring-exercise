@@ -1,6 +1,9 @@
 import { useQuery } from "@apollo/client/react";
 import { Link } from "react-router";
+import type { Route } from "./+types/home";
 import { GetEventsDocument } from "../../src/generated/graphql";
+
+export const meta: Route.MetaFunction = () => [{ title: "Events" }];
 import { Card, CardHeader, CardTitle } from "../../src/components/ui/card";
 import { StarRating } from "../../src/components/StarRating";
 

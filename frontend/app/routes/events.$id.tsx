@@ -1,6 +1,26 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client/react";
 import { useParams, Link, useSearchParams } from "react-router";
+import type { Route } from "./+types/events.$id";
+
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
+	const res = await fetch("http://localhost:4000/", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({
+			query: `query GetEventName($id: ID!) { event(id: $id) { name } }`,
+			variables: { id: params.id },
+		}),
+	});
+	const json = await res.json();
+	return { name: json.data?.event?.name as string | undefined };
+}
+
+export const meta: Route.MetaFunction = ({ data, location }) => {
+	const page = new URLSearchParams(location.search).get("page");
+	const suffix = page && Number(page) > 1 ? ` · Page ${page}` : "";
+	return [{ title: `${data?.name ?? "Event"}${suffix}` }];
+};
 import {
 	GetEventDocument,
 	type GetEventQuery,

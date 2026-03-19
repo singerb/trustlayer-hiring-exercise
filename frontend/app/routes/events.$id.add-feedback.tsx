@@ -1,5 +1,23 @@
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router";
+import type { Route } from "./+types/events.$id.add-feedback";
+
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
+	const res = await fetch("http://localhost:4000/", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({
+			query: `query GetEventName($id: ID!) { event(id: $id) { name } }`,
+			variables: { id: params.id },
+		}),
+	});
+	const json = await res.json();
+	return { name: json.data?.event?.name as string | undefined };
+}
+
+export const meta: Route.MetaFunction = ({ data }) => {
+	return [{ title: `Submit Feedback · ${data?.name ?? "Event"}` }];
+};
 import { useQuery, useMutation } from "@apollo/client/react";
 import {
 	GetEventDocument,
