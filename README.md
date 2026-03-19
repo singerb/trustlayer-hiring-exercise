@@ -35,7 +35,7 @@ This was developed with heavy Claude Code usage; the commits roughly mirror the 
 In order, highest to lowest:
 
 - [x] Add prettier and run it. This makes me twitch a bit right now honestly, but it's not a functional issue.
-- [ ] No way to add events right now outside of the seeds or raw DB access. This is fine for the current case; you can see two different events and add feedback to each one. Adding a new mutation for this and either a script or some new UI wouldn't be hard.
+- [x] No way to add events right now outside of the seeds or raw DB access. This is fine for the current case; you can see two different events and add feedback to each one. Adding a new mutation for this and either a script or some new UI wouldn't be hard.
 - [ ] Pagination on the feedback list doesn't persist in the URL params. This is annoying (refresh the page and lose your place in the pagination) but straightforward to fix by updating the location (correctly, with history; React Router helps here IIRC) when you update the pagination variables.
 - [ ] Page titles aren't set per routed page right now; also easy to fix with a standard pattern.
 - [ ] Some type issues in the backend; knex does a decent job but sometimes need help, and pubsub may need some help too.
