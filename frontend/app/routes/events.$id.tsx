@@ -32,9 +32,14 @@ export default function EventPage() {
 		variables: { id: id!, ...filterVars, ...paginationVars },
 	});
 
+	// Reset live count whenever filter/page context changes
 	useEffect(() => {
-		// TODO: not a great idea, but with the constant 0 we won't get an infinite loop here
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setLiveCount(0);
+	}, [id, minEnabled, minRating, maxEnabled, maxRating, page]);
+
+	// Subscribe to more when on page 1
+	useEffect(() => {
 		if (!id || page !== 1) return;
 		return subscribeToMore({
 			document: FeedbackAddedDocument,

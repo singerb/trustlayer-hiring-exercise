@@ -15,4 +15,20 @@ export default defineConfig(
 			},
 		},
 	},
+	{
+		ignores: ["src/generated/"],
+	},
+	{
+		// Knex returns `any` throughout; these rules can't be satisfied without a full
+		// type-parametrised Knex setup which is out of scope.
+		files: ["src/index.ts"],
+		rules: {
+			"@typescript-eslint/no-unsafe-assignment": "off",
+			"@typescript-eslint/no-unsafe-return": "off",
+			"@typescript-eslint/no-unsafe-member-access": "off",
+			"@typescript-eslint/no-unsafe-call": "off",
+			"@typescript-eslint/no-explicit-any": "off",
+			"@typescript-eslint/restrict-template-expressions": "off",
+		},
+	},
 );

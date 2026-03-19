@@ -79,10 +79,10 @@ const resolvers: Resolvers = {
 	Subscription: {
 		feedbackAdded: {
 			subscribe: withFilter(
-				(_, { eventId }) =>
-					pubsub.asyncIterableIterator(`FEEDBACK_ADDED.${eventId}`),
+				(_, args: any) =>
+					pubsub.asyncIterableIterator(`FEEDBACK_ADDED.${args.eventId}`),
 				// TODO: another annoying any here; I assume the pubsub stuff can be better typed
-				(payload: any, { minRating, maxRating }) => {
+				(payload: any, { minRating, maxRating }: any) => {
 					const rating = payload.feedbackAdded.rating;
 					if (minRating != null && rating < minRating) return false;
 					if (maxRating != null && rating > maxRating) return false;
