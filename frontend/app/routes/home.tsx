@@ -3,13 +3,21 @@ import type { Route } from "./+types/home";
 import { Card, CardHeader, CardTitle } from "../../src/components/ui/card";
 import { StarRating } from "../../src/components/StarRating";
 export async function clientLoader() {
-	const res = await fetch("http://localhost:4000/", {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({
-			query: `query GetEvents { events { id name averageRating reviewCount } }`,
-		}),
-	});
+	let res: Response;
+	try {
+		res = await fetch("http://localhost:4000/", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				query: `query GetEvents { events { id name averageRating reviewCount } }`,
+			}),
+		});
+	} catch (e) {
+		throw e instanceof Error ? e : new Error(String(e));
+	}
+	if (!res.ok) {
+		throw new Error(`Server error: ${res.status} ${res.statusText}`);
+	}
 	const json = await res.json();
 	return {
 		events: json.data?.events as Array<{

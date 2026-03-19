@@ -2,10 +2,11 @@ import { ApolloClient, HttpLink, InMemoryCache, split } from "@apollo/client";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient } from "graphql-ws";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigation } from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigation, useRouteError } from "react-router";
 import "../src/index.css";
 import { ApolloProvider } from "@apollo/client/react";
 import { Spinner } from "../src/components/Spinner";
+import { ErrorDisplay } from "../src/components/ErrorDisplay";
 
 const httpLink = new HttpLink({ uri: "http://localhost:4000/" });
 
@@ -28,6 +29,15 @@ const client = new ApolloClient({
 	link,
 	cache: new InMemoryCache(),
 });
+
+export function ErrorBoundary() {
+	const error = useRouteError();
+	return (
+		<div className="mx-auto max-w-2xl px-4 py-8">
+			<ErrorDisplay error={error} />
+		</div>
+	);
+}
 
 export function HydrateFallback() {
 	return (

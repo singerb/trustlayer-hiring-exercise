@@ -3,14 +3,22 @@ import { useParams, useNavigate, Link } from "react-router";
 import type { Route } from "./+types/events.$id.add-feedback";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-	const res = await fetch("http://localhost:4000/", {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({
-			query: `query GetEventName($id: ID!) { event(id: $id) { name } }`,
-			variables: { id: params.id },
-		}),
-	});
+	let res: Response;
+	try {
+		res = await fetch("http://localhost:4000/", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				query: `query GetEventName($id: ID!) { event(id: $id) { name } }`,
+				variables: { id: params.id },
+			}),
+		});
+	} catch (e) {
+		throw e instanceof Error ? e : new Error(String(e));
+	}
+	if (!res.ok) {
+		throw new Error(`Server error: ${res.status} ${res.statusText}`);
+	}
 	const json = await res.json();
 	return { name: json.data?.event?.name as string | undefined };
 }
@@ -24,6 +32,7 @@ import {
 	AddFeedbackDocument,
 } from "../../src/generated/graphql";
 import { ChevronLeft } from "lucide-react";
+import { ErrorDisplay } from "../../src/components/ErrorDisplay";
 export default function AddFeedbackPage({ loaderData }: Route.ComponentProps) {
 	const { id } = useParams();
 	const navigate = useNavigate();
@@ -34,20 +43,27 @@ export default function AddFeedbackPage({ loaderData }: Route.ComponentProps) {
 	const [userName, setUserName] = useState("");
 	const [description, setDescription] = useState("");
 	const [rating, setRating] = useState(0);
+	const [submitError, setSubmitError] = useState<unknown>(null);
 
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
-		await addFeedback({
-			variables: { eventId: id!, userName, rating, description },
-			// TODO: this is a bit much in terms of coupling with the events page (knowing the pagination vars), but works to refresh correctly
-			refetchQueries: [
-				{
-					query: GetEventDocument,
-					variables: { id: id!, offset: 0, limit: 10 },
-				},
-			],
-			awaitRefetchQueries: true,
-		});
+		setSubmitError(null);
+		try {
+			await addFeedback({
+				variables: { eventId: id!, userName, rating, description },
+				// TODO: this is a bit much in terms of coupling with the events page (knowing the pagination vars), but works to refresh correctly
+				refetchQueries: [
+					{
+						query: GetEventDocument,
+						variables: { id: id!, offset: 0, limit: 10 },
+					},
+				],
+				awaitRefetchQueries: true,
+			});
+		} catch (e) {
+			setSubmitError(e);
+			return;
+		}
 		navigate(`/events/${id}`);
 	}
 
@@ -109,6 +125,7 @@ export default function AddFeedbackPage({ loaderData }: Route.ComponentProps) {
 					/>
 				</div>
 
+				{submitError !== null && <ErrorDisplay error={submitError} />}
 				<button
 					type="submit"
 					className="bg-primary text-primary-foreground rounded px-4 py-2 text-sm font-medium w-fit"

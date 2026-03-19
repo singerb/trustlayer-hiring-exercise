@@ -5,14 +5,22 @@ import type { ShouldRevalidateFunctionArgs } from "react-router";
 import type { Route } from "./+types/events.$id";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-	const res = await fetch("http://localhost:4000/", {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({
-			query: `query GetEventName($id: ID!) { event(id: $id) { name } }`,
-			variables: { id: params.id },
-		}),
-	});
+	let res: Response;
+	try {
+		res = await fetch("http://localhost:4000/", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				query: `query GetEventName($id: ID!) { event(id: $id) { name } }`,
+				variables: { id: params.id },
+			}),
+		});
+	} catch (e) {
+		throw e instanceof Error ? e : new Error(String(e));
+	}
+	if (!res.ok) {
+		throw new Error(`Server error: ${res.status} ${res.statusText}`);
+	}
 	const json = await res.json();
 	return { name: json.data?.event?.name as string | undefined };
 }
@@ -35,6 +43,7 @@ import { Card, CardContent } from "../../src/components/ui/card";
 import { StarRating } from "../../src/components/StarRating";
 import { ChevronLeft } from "lucide-react";
 import { Spinner } from "../../src/components/Spinner";
+import { ErrorDisplay } from "../../src/components/ErrorDisplay";
 
 const PAGE_SIZE = 10;
 
@@ -92,7 +101,7 @@ export default function EventPage({ loaderData }: Route.ComponentProps) {
 		});
 	}, [id, subscribeToMore, minEnabled, minRating, maxEnabled, maxRating, page]);
 
-	if (error) return <p>Error: {error.message}</p>;
+	if (error) return <ErrorDisplay error={error} />;
 
 	const event = data?.event;
 	const totalPages = event ? Math.ceil(event.feedbackCount / PAGE_SIZE) : 0;
