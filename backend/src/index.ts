@@ -58,6 +58,10 @@ const resolvers: Resolvers = {
 		eventId: (feedback: any) => feedback.event_id,
 	},
 	Mutation: {
+		createEvent: async (_, { name }) => {
+			const [id] = await db("events").insert({ name });
+			return db("events").where({ id }).first();
+		},
 		addFeedback: async (_, { eventId, userName, rating, description }) => {
 			const [id] = await db("feedback").insert({
 				event_id: eventId,

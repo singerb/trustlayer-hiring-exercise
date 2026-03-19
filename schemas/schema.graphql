@@ -5,6 +5,7 @@ type Query {
 
 type Mutation {
   addFeedback(eventId: ID!, userName: String!, rating: Int!, description: String!): Feedback!
+  createEvent(name: String!): Event!
 }
 
 type Subscription {

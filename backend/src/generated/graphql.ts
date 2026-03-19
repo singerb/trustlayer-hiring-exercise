@@ -65,6 +65,7 @@ export type Feedback = {
 export type Mutation = {
 	__typename?: "Mutation";
 	addFeedback: Feedback;
+	createEvent: Event;
 };
 
 export type MutationAddFeedbackArgs = {
@@ -72,6 +73,10 @@ export type MutationAddFeedbackArgs = {
 	eventId: Scalars["ID"]["input"];
 	rating: Scalars["Int"]["input"];
 	userName: Scalars["String"]["input"];
+};
+
+export type MutationCreateEventArgs = {
+	name: Scalars["String"]["input"];
 };
 
 export type Query = {
@@ -292,6 +297,12 @@ export type MutationResolvers<
 			MutationAddFeedbackArgs,
 			"description" | "eventId" | "rating" | "userName"
 		>
+	>;
+	createEvent?: Resolver<
+		ResolversTypes["Event"],
+		ParentType,
+		ContextType,
+		RequireFields<MutationCreateEventArgs, "name">
 	>;
 };
 
