@@ -18,32 +18,22 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 export const meta: Route.MetaFunction = ({ data }) => {
 	return [{ title: `Submit Feedback · ${data?.name ?? "Event"}` }];
 };
-import { useQuery, useMutation } from "@apollo/client/react";
+import { useMutation } from "@apollo/client/react";
 import {
 	GetEventDocument,
 	AddFeedbackDocument,
 } from "../../src/generated/graphql";
 import { ChevronLeft } from "lucide-react";
-
-export default function AddFeedbackPage() {
+export default function AddFeedbackPage({ loaderData }: Route.ComponentProps) {
 	const { id } = useParams();
 	const navigate = useNavigate();
-
-	const { loading, error, data } = useQuery(GetEventDocument, {
-		variables: { id: id! },
-	});
+	const eventName = loaderData.name ?? "Event";
 
 	const [addFeedback] = useMutation(AddFeedbackDocument);
 
 	const [userName, setUserName] = useState("");
 	const [description, setDescription] = useState("");
 	const [rating, setRating] = useState(0);
-
-	if (loading) return <p>Loading...</p>;
-	if (error) return <p>Error: {error.message}</p>;
-	if (!data?.event) return <p>Event not found</p>;
-
-	const { event } = data;
 
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
@@ -67,11 +57,11 @@ export default function AddFeedbackPage() {
 				to={`/events/${id}`}
 				className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
 			>
-				<ChevronLeft size={16} /> {event.name}
+				<ChevronLeft size={16} /> {eventName}
 			</Link>
 
 			<h1 className="text-3xl font-bold">
-				Submit feedback for &apos;{event.name}&apos;
+				Submit feedback for &apos;{eventName}&apos;
 			</h1>
 
 			<form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md">

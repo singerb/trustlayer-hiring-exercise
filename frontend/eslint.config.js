@@ -24,7 +24,7 @@ export default defineConfig([
 				"error",
 				{
 					allowConstantExport: true,
-					allowExportNames: ["meta", "clientLoader"],
+					allowExportNames: ["meta", "clientLoader", "shouldRevalidate"],
 				},
 			],
 		},

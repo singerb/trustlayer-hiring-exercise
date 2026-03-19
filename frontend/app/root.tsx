@@ -2,9 +2,10 @@ import { ApolloClient, HttpLink, InMemoryCache, split } from "@apollo/client";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient } from "graphql-ws";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigation } from "react-router";
 import "../src/index.css";
 import { ApolloProvider } from "@apollo/client/react";
+import { Spinner } from "../src/components/Spinner";
 
 const httpLink = new HttpLink({ uri: "http://localhost:4000/" });
 
@@ -28,6 +29,16 @@ const client = new ApolloClient({
 	cache: new InMemoryCache(),
 });
 
+export function HydrateFallback() {
+	return (
+		<div className="mx-auto max-w-2xl px-4 py-8">
+			<div className="flex justify-center mt-8">
+				<Spinner className="h-8 w-8 text-muted-foreground" />
+			</div>
+		</div>
+	);
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en">
@@ -47,10 +58,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function Root() {
+	const navigation = useNavigation();
 	return (
 		<ApolloProvider client={client}>
 			<div className="mx-auto max-w-2xl px-4 py-8">
-				<Outlet />
+				{navigation.state === "loading" ? (
+					<div className="flex justify-center mt-8">
+						<Spinner className="h-8 w-8 text-muted-foreground" />
+					</div>
+				) : (
+					<Outlet />
+				)}
 			</div>
 		</ApolloProvider>
 	);

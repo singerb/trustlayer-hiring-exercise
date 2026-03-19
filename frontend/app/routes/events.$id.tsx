@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client/react";
 import { useParams, Link, useSearchParams } from "react-router";
+import type { ShouldRevalidateFunctionArgs } from "react-router";
 import type { Route } from "./+types/events.$id";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
@@ -16,6 +17,10 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	return { name: json.data?.event?.name as string | undefined };
 }
 
+export function shouldRevalidate({ currentUrl, nextUrl }: ShouldRevalidateFunctionArgs) {
+	return currentUrl.pathname !== nextUrl.pathname;
+}
+
 export const meta: Route.MetaFunction = ({ data, location }) => {
 	const page = new URLSearchParams(location.search).get("page");
 	const suffix = page && Number(page) > 1 ? ` · Page ${page}` : "";
@@ -29,10 +34,11 @@ import {
 import { Card, CardContent } from "../../src/components/ui/card";
 import { StarRating } from "../../src/components/StarRating";
 import { ChevronLeft } from "lucide-react";
+import { Spinner } from "../../src/components/Spinner";
 
 const PAGE_SIZE = 10;
 
-export default function EventPage() {
+export default function EventPage({ loaderData }: Route.ComponentProps) {
 	const { id } = useParams();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const page = Math.max(1, Number(searchParams.get("page") ?? 1));
@@ -86,12 +92,10 @@ export default function EventPage() {
 		});
 	}, [id, subscribeToMore, minEnabled, minRating, maxEnabled, maxRating, page]);
 
-	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error: {error.message}</p>;
-	if (!data?.event) return <p>Event not found</p>;
 
-	const { event } = data;
-	const totalPages = Math.ceil(event.feedbackCount / PAGE_SIZE);
+	const event = data?.event;
+	const totalPages = event ? Math.ceil(event.feedbackCount / PAGE_SIZE) : 0;
 
 	return (
 		<div className="flex flex-col gap-6">
@@ -103,7 +107,7 @@ export default function EventPage() {
 			</Link>
 
 			<div>
-				<h1 className="text-3xl font-bold">{event.name}</h1>
+				<h1 className="text-3xl font-bold">{loaderData.name ?? "Event"}</h1>
 				<Link
 					to={`/events/${id}/add-feedback`}
 					className="mt-2 inline-block text-sm text-primary underline"
@@ -180,65 +184,73 @@ export default function EventPage() {
 			</div>
 
 			<div className="flex flex-col gap-3">
-				<div className="flex items-center justify-between text-sm text-muted-foreground">
-					<span>
-						{event.feedbackCount}{" "}
-						{event.feedbackCount === 1 ? "review" : "reviews"}
-					</span>
-					{page === 1 ? (
-						<span>● Live{liveCount > 0 ? ` · ${liveCount} new` : ""}</span>
-					) : (
-						<span>○ Live updates paused</span>
-					)}
-				</div>
-				{event.feedback.map((fb) => (
-					<Card
-						key={fb.id}
-						className="animate-in slide-in-from-top-2 fade-in-0 duration-300"
-					>
-						<CardContent className="flex gap-4 pt-4">
-							<div className="flex flex-col gap-1 min-w-[120px]">
-								<StarRating rating={fb.rating} />
-								<span className="text-sm text-muted-foreground">
-									{fb.userName}
-								</span>
-							</div>
-							<p className="text-sm">{fb.description}</p>
-						</CardContent>
-					</Card>
-				))}
-				{totalPages > 1 && (
-					<div className="flex items-center justify-between text-sm">
-						<button
-							onClick={() =>
-								setSearchParams((p) => {
-									const next = new URLSearchParams(p);
-									next.set("page", String(page - 1));
-									return next;
-								})
-							}
-							disabled={page === 1}
-							className="px-3 py-1 border rounded disabled:opacity-40"
-						>
-							Previous
-						</button>
-						<span>
-							Page {page} of {totalPages}
-						</span>
-						<button
-							onClick={() =>
-								setSearchParams((p) => {
-									const next = new URLSearchParams(p);
-									next.set("page", String(page + 1));
-									return next;
-								})
-							}
-							disabled={page >= totalPages}
-							className="px-3 py-1 border rounded disabled:opacity-40"
-						>
-							Next
-						</button>
+				{loading ? (
+					<div className="flex justify-center mt-8">
+						<Spinner className="h-8 w-8 text-muted-foreground" />
 					</div>
+				) : (
+					<>
+						<div className="flex items-center justify-between text-sm text-muted-foreground">
+							<span>
+								{event?.feedbackCount}{" "}
+								{event?.feedbackCount === 1 ? "review" : "reviews"}
+							</span>
+							{page === 1 ? (
+								<span>● Live{liveCount > 0 ? ` · ${liveCount} new` : ""}</span>
+							) : (
+								<span>○ Live updates paused</span>
+							)}
+						</div>
+						{event?.feedback.map((fb) => (
+							<Card
+								key={fb.id}
+								className="animate-in slide-in-from-top-2 fade-in-0 duration-300"
+							>
+								<CardContent className="flex gap-4 pt-4">
+									<div className="flex flex-col gap-1 min-w-[120px]">
+										<StarRating rating={fb.rating} />
+										<span className="text-sm text-muted-foreground">
+											{fb.userName}
+										</span>
+									</div>
+									<p className="text-sm">{fb.description}</p>
+								</CardContent>
+							</Card>
+						))}
+						{totalPages > 1 && (
+							<div className="flex items-center justify-between text-sm">
+								<button
+									onClick={() =>
+										setSearchParams((p) => {
+											const next = new URLSearchParams(p);
+											next.set("page", String(page - 1));
+											return next;
+										})
+									}
+									disabled={page === 1}
+									className="px-3 py-1 border rounded disabled:opacity-40"
+								>
+									Previous
+								</button>
+								<span>
+									Page {page} of {totalPages}
+								</span>
+								<button
+									onClick={() =>
+										setSearchParams((p) => {
+											const next = new URLSearchParams(p);
+											next.set("page", String(page + 1));
+											return next;
+										})
+									}
+									disabled={page >= totalPages}
+									className="px-3 py-1 border rounded disabled:opacity-40"
+								>
+									Next
+								</button>
+							</div>
+						)}
+					</>
 				)}
 			</div>
 		</div>

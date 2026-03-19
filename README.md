@@ -41,7 +41,7 @@ In order, highest to lowest:
 - [ ] Some type issues in the backend; knex does a decent job but sometimes need help, and pubsub may need some help too.
 - [ ] Breaking the API code out of the components; this is a bit too much intermixing of API logic and component/display right now.
 - [ ] Non-default error boundary, better error handling from queries. Errors are just rendered right now, either with a stack trace (top-level) or just a message (API errors). Fine for development, but would need fixing for production.
-- [ ] Loading component with spinner for all those pages with a loading state. Moving some of the loading logic into client loaders in React Router and then adding a top-level loading state can help here too.
+- [x] Loading component with spinner for all those pages with a loading state. Moving some of the loading logic into client loaders in React Router and then adding a top-level loading state can help here too.
 - [ ] Split the schemas up; having the backend and frontend schema bits in the same file makes it easy to read and understand, but is a bit weird from a GraphQL standpoint. The frontend queries could be moved elsewhere and codegen'ed from there.
 - [ ] No pagination on the events list. Again, fine with the current limited events, and easy to add.
 - [ ] More components factored out; the event view in particular is right at the edge of being too big.

@@ -1,21 +1,34 @@
-import { useQuery } from "@apollo/client/react";
 import { Link } from "react-router";
 import type { Route } from "./+types/home";
-import { GetEventsDocument } from "../../src/generated/graphql";
-
-export const meta: Route.MetaFunction = () => [{ title: "Events" }];
 import { Card, CardHeader, CardTitle } from "../../src/components/ui/card";
 import { StarRating } from "../../src/components/StarRating";
+export async function clientLoader() {
+	const res = await fetch("http://localhost:4000/", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({
+			query: `query GetEvents { events { id name averageRating reviewCount } }`,
+		}),
+	});
+	const json = await res.json();
+	return {
+		events: json.data?.events as Array<{
+			id: string;
+			name: string;
+			averageRating: number | null;
+			reviewCount: number;
+		}>,
+	};
+}
 
-export default function Home() {
-	const { loading, error, data } = useQuery(GetEventsDocument);
+export const meta: Route.MetaFunction = () => [{ title: "Events" }];
 
-	if (loading) return <p>Loading...</p>;
-	if (error) return <p>Error: {error.message}</p>;
+export default function Home({ loaderData }: Route.ComponentProps) {
+	const events = loaderData.events;
 
 	return (
 		<div className="flex flex-col gap-4">
-			{data?.events?.map((event) => (
+			{events?.map((event) => (
 				<Link key={event.id} to={`/events/${event.id}`}>
 					<Card className="hover:bg-accent transition-colors">
 						<CardHeader className="flex flex-row items-center justify-between">
