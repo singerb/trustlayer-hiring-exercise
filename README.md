@@ -20,7 +20,13 @@ The app will be available at http://localhost:5174
 
 These are all in `backend/`.
 
-- TODO: create event
+- `yarn create-event`
+    - Can take an optional `--name` argument, otherwise will generate a random name.
+    - Adds a new event to the database.
+- `yarn drip-feedback`
+    - Can take an option `--event-id` argument; get these from the URL on the frontend; if none given, will pick a new event for every submission.
+    - Drips feedback in at a rate of 1 new feedback every 1-5 seconds, with random data.
+    - Use for testing the live update functionality on the frontend.
 - To reset the database, just delete the `dev.sqlite3` file in the backend, re-run the migration, restart the server, and re-run the seeds if desired.
 
 ## Technology choices and reasoning
@@ -49,7 +55,7 @@ In order, highest to lowest:
 - [x] Page titles aren't set per routed page right now; also easy to fix with a standard pattern.
 - [x] Add appropriate index to the feedback table.
 - [x] Redo the add event script in TS, and use a GraphQL client for it, in preparation for more complex test scripts.
-- [ ] Add a script to dribble in responses for testing the live update more easily than having two tabs open; random interval between responses (say 1-10sec), random data generation. Will need to load the event IDs in.
+- [x] Add a script to dribble in responses for testing the live update more easily than having two tabs open; random interval between responses (say 1-10sec), random data generation. Will need to load the event IDs in.
 - [ ] Add a script for load testing; should spin up multiple (configurable) worker threads and hammer the DB. Printing response time stats would be great too.
 - [ ] Compute the average rating and count at feedback submission time, rather than retrieval; store in the DB. Compute synchronously for now.
 - [ ] Move the computed fields to be re-done asynchronously, de-bounced. Ideally in-process, whether that's a worker thread to get it off the main event loop, or just a timeout.

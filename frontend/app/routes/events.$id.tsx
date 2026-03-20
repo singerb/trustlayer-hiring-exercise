@@ -94,7 +94,8 @@ export default function EventPage({ loaderData }: Route.ComponentProps) {
 					...prev,
 					event: {
 						...prev.event,
-						feedback: [newFeedback, ...(prev.event.feedback ?? [])], // prepend because we're in reverse order
+						feedbackCount: (prev.event.feedbackCount ?? 0) + 1,
+						feedback: [newFeedback, ...(prev.event.feedback ?? [])].slice(0, PAGE_SIZE), // prepend because we're in reverse order; trim to page size
 					},
 				} as GetEventQuery;
 			},

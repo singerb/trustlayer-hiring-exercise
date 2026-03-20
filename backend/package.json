@@ -14,7 +14,8 @@
 		"codegen": "graphql-codegen --config codegen.ts",
 		"migrate": "tsx ./node_modules/.bin/knex migrate:latest --knexfile knexfile.ts",
 		"seed": "tsx ./node_modules/.bin/knex seed:run --knexfile knexfile.ts",
-		"create-event": "tsx scripts/create-event.ts"
+		"create-event": "tsx scripts/create-event.ts",
+		"drip-feedback": "tsx scripts/drip-feedback.ts"
 	},
 	"dependencies": {
 		"@apollo/server": "^5.4.0",
@@ -32,21 +33,22 @@
 		"@apollo/client": "^3.13.8",
 		"@eslint/js": "^10.0.1",
 		"@graphql-codegen/cli": "6.2.1",
+		"@graphql-codegen/typed-document-node": "^5.0.13",
 		"@graphql-codegen/typescript": "5.0.9",
 		"@graphql-codegen/typescript-operations": "^4.5.1",
 		"@graphql-codegen/typescript-resolvers": "5.1.7",
-		"@graphql-codegen/typed-document-node": "^5.0.13",
-		"commander": "^14.0.0",
-		"unique-names-generator": "^4.7.1",
 		"@types/cors": "^2.8.19",
 		"@types/express": "^5.0.6",
 		"@types/node": "^25.5.0",
 		"@types/ws": "^8.18.1",
+		"commander": "^14.0.0",
 		"eslint": "^10.0.3",
+		"lorem-ipsum": "^2.0.8",
 		"nodemon": "^3.1.14",
 		"prettier": "^3.8.1",
 		"tsx": "^4.21.0",
 		"typescript": "^5.9.3",
-		"typescript-eslint": "^8.57.0"
+		"typescript-eslint": "^8.57.0",
+		"unique-names-generator": "^4.7.1"
 	}
 }
