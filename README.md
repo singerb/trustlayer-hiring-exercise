@@ -47,7 +47,7 @@ In order, highest to lowest:
 - [x] No way to add events right now outside of the seeds or raw DB access. This is fine for the current case; you can see two different events and add feedback to each one. Adding a new mutation for this and either a script or some new UI wouldn't be hard.
 - [x] Pagination on the feedback list doesn't persist in the URL params. This is annoying (refresh the page and lose your place in the pagination) but straightforward to fix by updating the location (correctly, with history; React Router helps here IIRC) when you update the pagination variables.
 - [x] Page titles aren't set per routed page right now; also easy to fix with a standard pattern.
-- [ ] Add appropriate index to the feedback table.
+- [x] Add appropriate index to the feedback table.
 - [ ] Redo the add event script in TS, and use a GraphQL client for it, in preparation for more complex test scripts.
 - [ ] Add a script to dribble in responses for testing the live update more easily than having two tabs open; random interval between responses (say 1-10sec), random data generation. Will need to load the event IDs in.
 - [ ] Add a script for load testing; should spin up multiple (configurable) worker threads and hammer the DB. Printing response time stats would be great too.
