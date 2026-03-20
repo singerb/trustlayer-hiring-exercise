@@ -48,7 +48,7 @@ In order, highest to lowest:
 - [x] Pagination on the feedback list doesn't persist in the URL params. This is annoying (refresh the page and lose your place in the pagination) but straightforward to fix by updating the location (correctly, with history; React Router helps here IIRC) when you update the pagination variables.
 - [x] Page titles aren't set per routed page right now; also easy to fix with a standard pattern.
 - [x] Add appropriate index to the feedback table.
-- [ ] Redo the add event script in TS, and use a GraphQL client for it, in preparation for more complex test scripts.
+- [x] Redo the add event script in TS, and use a GraphQL client for it, in preparation for more complex test scripts.
 - [ ] Add a script to dribble in responses for testing the live update more easily than having two tabs open; random interval between responses (say 1-10sec), random data generation. Will need to load the event IDs in.
 - [ ] Add a script for load testing; should spin up multiple (configurable) worker threads and hammer the DB. Printing response time stats would be great too.
 - [ ] Compute the average rating and count at feedback submission time, rather than retrieval; store in the DB. Compute synchronously for now.

@@ -7,6 +7,15 @@ const config: CodegenConfig = {
 		"src/generated/graphql.ts": {
 			plugins: ["typescript", "typescript-resolvers"],
 		},
+		"scripts/generated/graphql.ts": {
+			documents: ["scripts/**/*.ts"],
+			plugins: ["typescript", "typescript-operations", "typed-document-node"],
+			config: {
+				useTypeImports: true,
+				defaultScalarType: "unknown",
+				skipTypeNameForRoot: true,
+			},
+		},
 	},
 };
 
