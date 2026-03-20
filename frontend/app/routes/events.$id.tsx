@@ -9,15 +9,11 @@ import { FeedbackFilters } from "../../src/components/FeedbackFilters";
 import { FeedbackList } from "../../src/components/FeedbackList";
 import { ChevronLeft } from "lucide-react";
 import { ErrorDisplay } from "../../src/components/ErrorDisplay";
-
-type GetEventNameData = { event: { name: string } | null };
+import { GetEventNameDocument } from "../../src/generated/graphql";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-	const data = await gqlFetch<GetEventNameData, { id: string }>(
-		`query GetEventName($id: ID!) { event(id: $id) { name } }`,
-		{ id: params.id! },
-	);
-	return { name: data.event?.name as string | undefined };
+	const data = await gqlFetch(GetEventNameDocument, { id: params.id! });
+	return { name: data?.event?.name as string | undefined };
 }
 
 export function shouldRevalidate({ currentUrl, nextUrl }: ShouldRevalidateFunctionArgs) {

@@ -29,6 +29,12 @@ type Feedback {
   description: String!
 }
 
+query GetEventName($id: ID!) {
+  event(id: $id) {
+    name
+  }
+}
+
 query GetEvents {
   events {
     id

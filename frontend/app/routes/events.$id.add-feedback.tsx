@@ -3,15 +3,11 @@ import { useParams, useNavigate, Link } from "react-router";
 import type { Route } from "./+types/events.$id.add-feedback";
 import { gqlFetch } from "../../src/lib/gql-fetch";
 import { PAGE_SIZE } from "../../src/lib/constants";
-
-type GetEventNameData = { event: { name: string } | null };
+import { GetEventNameDocument } from "../../src/generated/graphql";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-	const data = await gqlFetch<GetEventNameData, { id: string }>(
-		`query GetEventName($id: ID!) { event(id: $id) { name } }`,
-		{ id: params.id! },
-	);
-	return { name: data.event?.name as string | undefined };
+	const data = await gqlFetch(GetEventNameDocument, { id: params.id! });
+	return { name: data?.event?.name as string | undefined };
 }
 
 export const meta: Route.MetaFunction = ({ data }) => {

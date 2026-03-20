@@ -2,22 +2,12 @@ import { Link } from "react-router";
 import type { Route } from "./+types/home";
 import { Card, CardHeader, CardTitle } from "../../src/components/ui/card";
 import { StarRating } from "../../src/components/StarRating";
-import { gqlFetch } from "../../src/lib/gql-fetch";
-
-type GetEventsData = {
-	events: Array<{
-		id: string;
-		name: string;
-		averageRating: number | null;
-		reviewCount: number;
-	}>;
-};
+import { gqlSimpleFetch } from "../../src/lib/gql-fetch";
+import { GetEventsDocument } from "../../src/generated/graphql";
 
 export async function clientLoader() {
-	const data = await gqlFetch<GetEventsData>(
-		`query GetEvents { events { id name averageRating reviewCount } }`,
-	);
-	return { events: data.events };
+	const data = await gqlSimpleFetch(GetEventsDocument);
+	return { events: data?.events || [] };
 }
 
 export const meta: Route.MetaFunction = () => [{ title: "Events" }];
