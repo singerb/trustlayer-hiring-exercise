@@ -1,26 +1,17 @@
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router";
 import type { Route } from "./+types/events.$id.add-feedback";
+import { gqlFetch } from "../../src/lib/gql-fetch";
+import { PAGE_SIZE } from "../../src/lib/constants";
+
+type GetEventNameData = { event: { name: string } | null };
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-	let res: Response;
-	try {
-		res = await fetch("http://localhost:4000/", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				query: `query GetEventName($id: ID!) { event(id: $id) { name } }`,
-				variables: { id: params.id },
-			}),
-		});
-	} catch (e) {
-		throw e instanceof Error ? e : new Error(String(e));
-	}
-	if (!res.ok) {
-		throw new Error(`Server error: ${res.status} ${res.statusText}`);
-	}
-	const json = await res.json();
-	return { name: json.data?.event?.name as string | undefined };
+	const data = await gqlFetch<GetEventNameData, { id: string }>(
+		`query GetEventName($id: ID!) { event(id: $id) { name } }`,
+		{ id: params.id! },
+	);
+	return { name: data.event?.name as string | undefined };
 }
 
 export const meta: Route.MetaFunction = ({ data }) => {
@@ -55,7 +46,7 @@ export default function AddFeedbackPage({ loaderData }: Route.ComponentProps) {
 				refetchQueries: [
 					{
 						query: GetEventDocument,
-						variables: { id: id!, offset: 0, limit: 10 },
+						variables: { id: id!, offset: 0, limit: PAGE_SIZE },
 					},
 				],
 				awaitRefetchQueries: true,

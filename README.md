@@ -60,15 +60,17 @@ In order, highest to lowest:
 - [ ] Compute the average rating and count at feedback submission time, rather than retrieval; store in the DB. Compute synchronously for now.
 - [ ] Move the computed fields to be re-done asynchronously, de-bounced. Ideally in-process, whether that's a worker thread to get it off the main event loop, or just a timeout.
 - [ ] Some type issues in the backend; knex does a decent job but sometimes need help, and pubsub may need some help too.
-- [ ] Breaking the API code out of the components; this is a bit too much intermixing of API logic and component/display right now.
+- [x] Breaking the API code out of the components; this is a bit too much intermixing of API logic and component/display right now.
 - [ ] Add a page showing all feedback responses for all events; live updates on this one, but do infinite scroll instead of pagination, for fun.
 - [x] Non-default error boundary, better error handling from queries. Errors are just rendered right now, either with a stack trace (top-level) or just a message (API errors). Fine for development, but would need fixing for production.
 - [x] Loading component with spinner for all those pages with a loading state. Moving some of the loading logic into client loaders in React Router and then adding a top-level loading state can help here too.
 - [ ] Split the schemas up; having the backend and frontend schema bits in the same file makes it easy to read and understand, but is a bit weird from a GraphQL standpoint. The frontend queries could be moved elsewhere and codegen'ed from there.
 - [ ] No pagination on the events list. Again, fine with the current limited events, and easy to add.
-- [ ] More components factored out; the event view in particular is right at the edge of being too big.
+- [x] More components factored out; the event view in particular is right at the edge of being too big.
 - [ ] Better design for larger screens; it's mobile first and only right now, and looks fine on larger screens. More could be done with a multi-column layout when the width is available though, or a sidebar with the events list, etc.
 - [ ] Clickable star rating input in the submission form with nice hover state (you know the kind).
-- [ ] No tests anywhere.
+- [ ] Mobile usability pass (touch targets?).
+- [ ] Accessibility pass.
 - [ ] Anything in the codebase under `TODO` (just search for it).
 - [ ] Form framework (Tanstack Form or similar) once the form gets more complex.
+- [ ] No tests anywhere, but IMO this is less urgent; the backend has minimal logic to test right now, and the UI tests can be tricky and often brittle.

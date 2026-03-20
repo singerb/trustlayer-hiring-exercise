@@ -2,31 +2,22 @@ import { Link } from "react-router";
 import type { Route } from "./+types/home";
 import { Card, CardHeader, CardTitle } from "../../src/components/ui/card";
 import { StarRating } from "../../src/components/StarRating";
+import { gqlFetch } from "../../src/lib/gql-fetch";
+
+type GetEventsData = {
+	events: Array<{
+		id: string;
+		name: string;
+		averageRating: number | null;
+		reviewCount: number;
+	}>;
+};
+
 export async function clientLoader() {
-	let res: Response;
-	try {
-		res = await fetch("http://localhost:4000/", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				query: `query GetEvents { events { id name averageRating reviewCount } }`,
-			}),
-		});
-	} catch (e) {
-		throw e instanceof Error ? e : new Error(String(e));
-	}
-	if (!res.ok) {
-		throw new Error(`Server error: ${res.status} ${res.statusText}`);
-	}
-	const json = await res.json();
-	return {
-		events: json.data?.events as Array<{
-			id: string;
-			name: string;
-			averageRating: number | null;
-			reviewCount: number;
-		}>,
-	};
+	const data = await gqlFetch<GetEventsData>(
+		`query GetEvents { events { id name averageRating reviewCount } }`,
+	);
+	return { events: data.events };
 }
 
 export const meta: Route.MetaFunction = () => [{ title: "Events" }];
