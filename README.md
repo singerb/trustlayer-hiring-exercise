@@ -56,7 +56,8 @@ In order, highest to lowest:
 - [x] Add appropriate index to the feedback table.
 - [x] Redo the add event script in TS, and use a GraphQL client for it, in preparation for more complex test scripts.
 - [x] Add a script to dribble in responses for testing the live update more easily than having two tabs open; random interval between responses (say 1-10sec), random data generation. Will need to load the event IDs in.
-- [ ] Add a script for load testing; should spin up multiple (configurable) worker threads and hammer the DB. Printing response time stats would be great too.
+- [x] Add a script for load testing; should spin up multiple (configurable) worker threads and hammer the DB. Printing response time stats would be great too.
+- [ ] Add a script for load testing the event retrieval; should spin up multiple (configurable) worker threads and all query for the list of events with the computed stats; same response time outputs.
 - [ ] Compute the average rating and count at feedback submission time, rather than retrieval; store in the DB. Compute synchronously for now.
 - [ ] Move the computed fields to be re-done asynchronously, de-bounced. Ideally in-process, whether that's a worker thread to get it off the main event loop, or just a timeout.
 - [ ] Some type issues in the backend; knex does a decent job but sometimes need help, and pubsub may need some help too.

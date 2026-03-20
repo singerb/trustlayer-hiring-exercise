@@ -15,7 +15,8 @@
 		"migrate": "tsx ./node_modules/.bin/knex migrate:latest --knexfile knexfile.ts",
 		"seed": "tsx ./node_modules/.bin/knex seed:run --knexfile knexfile.ts",
 		"create-event": "tsx scripts/create-event.ts",
-		"drip-feedback": "tsx scripts/drip-feedback.ts"
+		"drip-feedback": "tsx scripts/drip-feedback.ts",
+		"load-test": "tsx scripts/load-test.ts"
 	},
 	"dependencies": {
 		"@apollo/server": "^5.4.0",
